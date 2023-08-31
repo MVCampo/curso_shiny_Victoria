@@ -118,14 +118,56 @@ hc
 
 # Defino UI para mi aplicación
 ui <- fluidPage(
-  # Titulo
-  titlePanel("Mortalidad infantil en Argentina")
-  )
+  fluidRow(
+    column(12,
+           h1("Mortalidad infantil en Argentina"), 
+           )
+  ),
+  hr(),
 
+  #primera fila de la ui = Título
+
+fluidRow(
+  column(3,
+        
+         selectInput(
+           
+           inputId = "selectProv",
+           
+           label = "seleccione una jurisdicción",
+           
+           choices = unique (bd$prov),
+           
+           selected = "Argentina"
+         ),
+   )
+),
+
+hr(),
+
+#segunda fila de la ui = display de seleccción
+  
+fluidRow(9,
+    
+         highchartOutput("grafico"),     
+         
+         align = "center"
+)
+  )
+browser()
 
 # Defino server
 server <- function(input, output) {
   
+  output$grafico = renderHighchart({
+    
+    provinciaSeleccionada = input$selectProv
+
+    hc = hc[hc$prov = provinciaSeleccionada,]
+    
+    highchart(hc)  
+  
+    })
  
 }
 
